@@ -13,8 +13,11 @@ Fase 1 fokuserer på kjernedatabaser og daglig oversikt:
 - **Matdatabase** ? matvarer, næringsinnhold, søk og registrering
 - **Brukerdatabase** ? brukere med roller: kunde, coach, admin
 - **Treningsprogram-database** ? program med ukeplan, økter og øvelser
-- **�velse-database** ? øvelser (styrke, kondisjon) som bygger program
-- **Daglig oversikt** ? alle dager samlet for trender (kalorier, trening, aktivitet)
+- **Øvelse-database** ? øvelser (styrke, kondisjon) som bygger program
+- **Daglig oversikt** – alle dager samlet for trender (kalorier, trening, aktivitet, vekt)
+- **Vektintegrasjon** – digital henting eller manuell inntasting
+- **AI treningsprogram** – korte, generelle program (innkjøring m.m.) før coach-nivå
+- **Digital tvilling** – skader/plager på figur, ukentlige bilder, utvikling over tid
 
 ---
 
@@ -65,7 +68,7 @@ Matføring knyttes til bruker, dato og matvare/mengde.
 
 ### Daglig oversikt (trender)
 
-En rad per bruker per dag: bruker_id, dato, kalorier_inn, protein_inn, karbo_inn, fett_inn, kalorier_m�l, trening_minutter, �kt_fullfort, notater (evt. skritt/wearables). Brukes til grafer og trender over tid.
+En rad per bruker per dag: bruker_id, dato, kalorier_inn, protein_inn, karbo_inn, fett_inn, kalorier_mål, trening_minutter, økt_fullfort, **vekt** (digital eller manuell), notater (evt. skritt/wearables). Brukes til grafer og trender over tid.
 
 ---
 
@@ -95,6 +98,22 @@ En rad per bruker per dag: bruker_id, dato, kalorier_inn, protein_inn, karbo_inn
 ### Integrasjoner
 - Strava, Oura, Polar, Garmin m.m.
 - Aktivitet, puls, søvn, kaloriforbruk
+
+### Vektintegrasjon
+- **Digital:** Hente vekt automatisk fra kompatible vekter (Wi‑Fi/Bluetooth, apper fra produsent)
+- **Manuell:** Inntasting av vekt direkte i appen
+- Vekt inkluderes i daglig oversikt og trender (grafer over tid, mål vs. faktisk)
+
+### AI – korte treningsprogram
+- AI genererer **korte, generelle treningsprogram** (f.eks. innkjøring, oppvarming, grunnleggende styrke)
+- Brukes **før** man går over til coach og mer detaljerte programmer
+- Gir brukeren et lett tilgjengelig, generelt nivå uten at coach er nødvendig
+
+### Digital tvilling
+- **Egen side** der bruker kan bygge en visuell «digital tvilling» av seg selv
+- **Skader og plager:** Legge inn ulike skader/plager (f.eks. overtråkk, skulder, kne) og markere dem på figuren
+- **Ukentlige bilder:** Laste opp ukentlig bilde og knytte til dato – se utvikling over x uker (sammenligning, trender)
+- **Figur-frontside:** Visning av hele mennesket som figur (front), slik at man ser oversikt over kropp og merking av plager/skader over tid
 
 ---
 
