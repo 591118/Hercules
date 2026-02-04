@@ -6,6 +6,55 @@ Målet er å gi brukere full oversikt over helse og prestasjon, samtidig som ser
 
 ---
 
+## V1 – Kjør med Docker
+
+Alt er dockerisert. Sentral bygging og kjøring (Docker må være startet):
+
+```bash
+docker compose up --build
+```
+
+- **Frontend:** http://localhost:8080  
+- **Backend API:** http://localhost:8000 (docs: http://localhost:8000/docs)  
+- **PostgreSQL:** localhost:5432 (bruker: hercules, passord: hercules, db: hercules)
+
+**Innlogging (admin):** E-post `admin@hercules.no`, passord `admin123` (se kommentar i `backend/db/init.sql`).
+
+**Innlogging feiler?** Hercules-backenden bruker **port 8000** og endepunktet **POST /api/auth/login**. Hvis du ser logg med port 5000 eller `/internal/users/auth-info` / `/login/user`, kjører du en annen app – sørg for at du er i Hercules-mappen og kjører `docker compose` der.
+
+**Nullstille DB og få ny admin:**  
+`docker compose down -v` (fjerner volum, så DB opprettes på nytt med init.sql)  
+Deretter: `docker compose up --build`
+
+### Roller (3 stk)
+
+| Rolle | Beskrivelse |
+|-------|-------------|
+| **admin** | Alle tilganger, kan bytte mellom views (kunde/coach/admin) |
+| **kunde** | Kunde-view – logger mat, trening, ser egen oversikt |
+| **kunde_og_coach** | Både kunde og coach – kan bytte mellom kunde- og coach-view |
+
+Database init: `backend/db/init.sql` (tabell `users`, enum `user_role`).
+
+### Repo-struktur V1
+
+```
+Hercules/
+├── backend/          # Python FastAPI, Postgres
+│   ├── app/          # main.py, database.py
+│   ├── db/           # init.sql
+│   ├── Dockerfile
+│   └── requirements.txt
+├── frontend/         # React (Vite) + nginx
+│   ├── src/
+│   ├── Dockerfile
+│   └── nginx.conf
+├── docker-compose.yml
+└── README.md
+```
+
+---
+
 ## Første del av appen - plan
 
 Fase 1 fokuserer på kjernedatabaser og daglig oversikt:
