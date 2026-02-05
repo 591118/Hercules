@@ -25,7 +25,7 @@ type AuthState = {
 
 type AuthContextValue = AuthState & {
   login: (email: string, password: string) => Promise<void>;
-  signup: (email: string, password: string, navn?: string) => Promise<void>;
+  signup: (email: string, password: string, navn?: string, payment_method_id?: string, payment_method_type?: "kort" | "vipps" | "paypal") => Promise<void>;
   logout: () => void;
   setUser: (user: User | null) => void;
 };
@@ -111,12 +111,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 
   const signup = useCallback(
-    async (email: string, password: string, navn?: string) => {
+    async (email: string, password: string, navn?: string, payment_method_id?: string, payment_method_type?: "kort" | "vipps" | "paypal") => {
       const base = getApiUrl();
+      const body: { email: string; password: string; navn: string; payment_method_id?: string; payment_method_type?: string } = {
+        email,
+        password,
+        navn: navn || "",
+      };
+      if (payment_method_id) body.payment_method_id = payment_method_id;
+      if (payment_method_type) body.payment_method_type = payment_method_type;
       const res = await fetch(`${base}/api/auth/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, navn: navn || "" }),
+        body: JSON.stringify(body),
       });
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));

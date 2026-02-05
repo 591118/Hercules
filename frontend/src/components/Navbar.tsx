@@ -11,10 +11,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Menu, X, Dumbbell, LogOut, User } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLocation } from "react-router-dom";
+import { isNativeApp } from "@/lib/capacitor";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, login, logout } = useAuth();
+  const location = useLocation();
+
+  const isAdmin = user?.rolle === "admin";
+  const isCoach = user?.rolle === "admin" || user?.rolle === "kunde_og_coach";
+  const hasMultipleViews = isAdmin || isCoach;
+  const isKundeView = location.pathname === "/dashboard" || location.pathname === "/dashboard/";
+  const isCoachView = location.pathname === "/dashboard/coach";
+  const isAdminView = location.pathname === "/dashboard/admin";
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [loginError, setLoginError] = useState("");
@@ -80,9 +90,30 @@ const Navbar = () => {
                     <p className="text-xs">{user.email}</p>
                     <p className="text-xs mt-1">Rolle: {user.rolle}</p>
                   </div>
+                  {hasMultipleViews && (
+                    <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground border-t border-border mt-1">
+                      Bytt view
+                    </div>
+                  )}
                   <DropdownMenuItem asChild>
-                    <Link to="/dashboard" className="cursor-pointer">Dashboard</Link>
+                    <Link to="/dashboard" className={`cursor-pointer ${isKundeView ? "bg-accent font-medium" : ""}`}>
+                      Kunde
+                    </Link>
                   </DropdownMenuItem>
+                  {isCoach && (
+                    <DropdownMenuItem asChild>
+                      <Link to="/dashboard/coach" className={`cursor-pointer ${isCoachView ? "bg-accent font-medium" : ""}`}>
+                        Coach
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+                  {isAdmin && (
+                    <DropdownMenuItem asChild>
+                      <Link to="/dashboard/admin" className={`cursor-pointer ${isAdminView ? "bg-accent font-medium" : ""}`}>
+                        Admin
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuItem onClick={() => logout()} className="cursor-pointer">
                     <LogOut className="mr-2 h-4 w-4" />
                     Logg ut
@@ -134,9 +165,11 @@ const Navbar = () => {
                     </form>
                   </DropdownMenuContent>
                 </DropdownMenu>
-                <Button variant="hero" size="default" asChild>
-                  <Link to="/signup">Start Free</Link>
-                </Button>
+                {!isNativeApp() && (
+                  <Button variant="hero" size="default" asChild>
+                    <Link to="/signup">Start Free</Link>
+                  </Button>
+                )}
               </>
             )}
           </div>
@@ -166,7 +199,11 @@ const Navbar = () => {
                 {user ? (
                   <>
                     <p className="text-sm text-muted-foreground">{user.navn || user.email}</p>
-                    <Button variant="ghost" className="justify-start" onClick={() => { logout(); setIsOpen(false); }}>
+                    {hasMultipleViews && <p className="text-xs text-muted-foreground pt-2">Bytt view</p>}
+                    <Link to="/dashboard" onClick={() => setIsOpen(false)} className="text-sm py-2 block">Kunde</Link>
+                    {isCoach && <Link to="/dashboard/coach" onClick={() => setIsOpen(false)} className="text-sm py-2 block">Coach</Link>}
+                    {isAdmin && <Link to="/dashboard/admin" onClick={() => setIsOpen(false)} className="text-sm py-2 block">Admin</Link>}
+                    <Button variant="ghost" className="justify-start mt-2" onClick={() => { logout(); setIsOpen(false); }}>
                       Logg ut
                     </Button>
                   </>
@@ -175,9 +212,11 @@ const Navbar = () => {
                     <Button variant="ghost" className="justify-start" asChild>
                       <Link to="/login" onClick={() => setIsOpen(false)}>Sign In</Link>
                     </Button>
-                    <Button variant="hero" asChild>
-                      <Link to="/signup" onClick={() => setIsOpen(false)}>Start Free</Link>
-                    </Button>
+                    {!isNativeApp() && (
+                      <Button variant="hero" asChild>
+                        <Link to="/signup" onClick={() => setIsOpen(false)}>Start Free</Link>
+                      </Button>
+                    )}
                   </>
                 )}
               </div>

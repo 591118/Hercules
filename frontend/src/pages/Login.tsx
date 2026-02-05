@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import { Dumbbell } from "lucide-react";
+import { isNativeApp } from "@/lib/capacitor";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -81,12 +82,14 @@ const Login = () => {
           </form>
         </div>
 
-        <p className="text-center text-sm text-muted-foreground">
-          Har du ikke konto?{" "}
-          <Link to="/signup" className="text-gold hover:underline">
-            Start Free
-          </Link>
-        </p>
+        {!isNativeApp() && (
+          <p className="text-center text-sm text-muted-foreground">
+            Har du ikke konto?{" "}
+            <Link to="/signup" className="text-gold hover:underline">
+              Start Free
+            </Link>
+          </p>
+        )}
       </div>
     </div>
   );
